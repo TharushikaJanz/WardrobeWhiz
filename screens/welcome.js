@@ -16,10 +16,10 @@ const WelcomeScreen = () => {
       >
         <View style={{ marginTop: 60 }}>
           <Text style={styles.welcomeText} variant="headlineLarge">
-            WELCOME
+           Welcome
           </Text>
           <Text style={styles.text} variant="headlineLarge">
-            Wardrobe Whiz
+            WARDROBE WHIZ
           </Text>
         </View>
 
@@ -31,22 +31,24 @@ const WelcomeScreen = () => {
             </Text>
           </View>
           <Button
-            mode="contained"
-            buttonColor="#5A515B"
+            mode="elevated"
+            buttonColor="#765952"
             style={{ borderRadius: 0, marginBottom: 15 }}
             uppercase={true}
             labelStyle={{fontSize: 15}}
+            textColor="#fff"
             
           >
             Register
           </Button>
 
           <Button
-            mode="contained"
-            buttonColor="#5A515B"
+            mode="elevated"
+            buttonColor="#765952"
             style={{ borderRadius: 0 }}
             uppercase={true}
             labelStyle={{fontSize: 15}}
+            textColor="#fff"
             
           >
             Sign In
@@ -68,17 +70,26 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    color: "white",
+    color: "#fff",
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 40,
+    fontSize: 35,
     lineHeight: 60,
+    letterSpacing: 1,
+    textShadowColor: '#9A7B4F',
+    textShadowOffset: { width: -2, height: 2 },
+    textShadowRadius: 15,
+    shadowOpacity: 4,
+    elevation: 8,
+    
   },
 
   welcomeText: {
     fontSize: 25,
     color: "white",
     textAlign: "center",
+    letterSpacing: 1,
+    fontStyle: "italic"
   },
   description: {
     color: "white",
