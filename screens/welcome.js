@@ -6,7 +6,15 @@ import { AntDesign } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { Button, Text } from "react-native-paper";
 
-const WelcomeScreen = () => {
+const WelcomeScreen = ({ navigation }) => {
+  const handleSignIn = () => {
+    navigation.navigate("signIn");
+  };
+
+  const handleRegister = () => {
+    navigation.navigate("register");
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ImageBackground
@@ -16,14 +24,13 @@ const WelcomeScreen = () => {
       >
         <View style={{ marginTop: 60 }}>
           <Text style={styles.welcomeText} variant="headlineLarge">
-           Welcome
+            Welcome
           </Text>
           <Text style={styles.text} variant="headlineLarge">
             WARDROBE WHIZ
           </Text>
         </View>
 
-        {/* <Image source={require('../assets/images/logo1.jpg')} style={{height: 100}} resizeMode="cover"/> */}
         <View style={styles.bottomContainer}>
           <View style={styles.subtitleContainer}>
             <Text style={styles.description} variant="bodyMedium">
@@ -35,9 +42,9 @@ const WelcomeScreen = () => {
             buttonColor="#765952"
             style={{ borderRadius: 0, marginBottom: 15 }}
             uppercase={true}
-            labelStyle={{fontSize: 15}}
+            labelStyle={{ fontSize: 15 }}
             textColor="#fff"
-            
+            onPress={handleRegister}
           >
             Register
           </Button>
@@ -47,9 +54,9 @@ const WelcomeScreen = () => {
             buttonColor="#765952"
             style={{ borderRadius: 0 }}
             uppercase={true}
-            labelStyle={{fontSize: 15}}
+            labelStyle={{ fontSize: 15 }}
             textColor="#fff"
-            
+            onPress={handleSignIn}
           >
             Sign In
           </Button>
@@ -76,12 +83,11 @@ const styles = StyleSheet.create({
     fontSize: 35,
     lineHeight: 60,
     letterSpacing: 1,
-    textShadowColor: '#9A7B4F',
+    textShadowColor: "#9A7B4F",
     textShadowOffset: { width: -2, height: 2 },
     textShadowRadius: 15,
     shadowOpacity: 4,
     elevation: 8,
-    
   },
 
   welcomeText: {
@@ -89,7 +95,7 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     letterSpacing: 1,
-    fontStyle: "italic"
+    fontStyle: "italic",
   },
   description: {
     color: "white",
