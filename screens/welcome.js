@@ -1,6 +1,5 @@
 import { ImageBackground, SafeAreaView, StyleSheet, View } from "react-native";
 import React from "react";
-import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { TextInput, Button, Text } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
 
 const SignInScreen = ({navigation}) => {
   const [email, setEmail] = React.useState('');
@@ -39,7 +40,7 @@ const SignInScreen = ({navigation}) => {
           <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
         </TouchableOpacity>
         <Button
-          mode="contained"
+          mode="elevated"
           onPress={() => console.log('Pressed')}
           style={styles.button}
           labelStyle={styles.buttonText}
@@ -77,12 +78,13 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 15,
     backgroundColor: '#fff',
+    elevation: 4
   },
   button: {
     marginTop: 30,
-    borderRadius: 5,
+    borderRadius: 25,
     backgroundColor: '#765952',
-    paddingVertical: 4
+    paddingVertical: 4,
   },
   buttonText: {
     color: '#FFF',

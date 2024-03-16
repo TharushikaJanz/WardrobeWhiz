@@ -24,7 +24,8 @@ const RegisterScreen = ({navigation}) => {
           mode="flat"
           underlineColor='#fff'
           style={styles.input}
-        //   left={<TextInput.Icon name="account-outline" />} // Change the icon as per your preference
+          theme={{ colors: { primary: '#765952', underlineColor: 'transparent' } }}
+        //   left={<FontAwesome5 name="camera" />}
         />
         <TextInput
           label="Phone No"
@@ -33,8 +34,9 @@ const RegisterScreen = ({navigation}) => {
           mode="flat"
           underlineColor='#fff'
           style={styles.input}
+          theme={{ colors: { primary: '#765952', underlineColor: 'transparent' } }}
           keyboardType="phone-pad"
-        //   left={<TextInput.Icon name="phone-outline" />} // Change the icon as per your preference
+        //   left={<TextInput.Icon name="phone-outline" />} 
         />
         <TextInput
           label="Email"
@@ -43,7 +45,8 @@ const RegisterScreen = ({navigation}) => {
           mode="flat"
           underlineColor='#fff'
           style={styles.input}
-        //   left={<TextInput.Icon name="email-outline" />} // Change the icon as per your preference
+          theme={{ colors: { primary: '#765952', underlineColor: 'transparent' } }}
+        //   left={<TextInput.Icon name="email-outline" />} 
         />
         <TextInput
           label="Password"
@@ -53,6 +56,7 @@ const RegisterScreen = ({navigation}) => {
           underlineColor='#fff'
           secureTextEntry
           style={styles.input}
+          theme={{ colors: { primary: '#765952', underlineColor: 'transparent' } }}
         //   right={<TextInput.Icon name="eye-off-outline" />} // Assuming you are using Material Community Icons
         />
         <TextInput
@@ -63,10 +67,11 @@ const RegisterScreen = ({navigation}) => {
           underlineColor='#fff'
           secureTextEntry
           style={styles.input}
-        //   right={<TextInput.Icon name="eye-off-outline" />} // Assuming you are using Material Community Icons
+          theme={{ colors: { primary: '#765952', underlineColor: 'transparent' } }}
+        //   right={<TextInput.Icon name="eye-off-outline" />} 
         />
         <Button
-          mode="contained"
+          mode="elevated"
           onPress={() => console.log('Pressed')}
           style={styles.button}
           labelStyle={styles.buttonText}
@@ -75,7 +80,7 @@ const RegisterScreen = ({navigation}) => {
         </Button>
         <TouchableOpacity style={styles.signIn} onPress={() => navigation.navigate('signIn')}>
           <Text style={styles.signInText}>
-            Have an Account? <Text style={styles.signInButtonText}>Sign in</Text>
+            Have an Account? <Text style={styles.signInButtonText}> Sign in</Text>
           </Text>
         </TouchableOpacity>
       </ScrollView>
@@ -103,10 +108,11 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: '#fff',
     marginBottom: 20,
+    elevation: 4
   },
   button: {
     marginTop: 40,
-    borderRadius: 5,
+    borderRadius: 25,
     paddingVertical: 4,
     backgroundColor: '#765952',
   },
