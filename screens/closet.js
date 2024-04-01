@@ -21,14 +21,14 @@ const categories = [
 
 // Dummy images data
 const items = [
-    { id: 1, source: require("../assets/bluetshirt.jpeg") },
-    { id: 2, source: require("../assets/redtshirt.webp") },
-    { id: 3, source: require("../assets/tshirt.jpeg") },
-    { id: 4, source: require("../assets/ashtshirt.jpeg") },
-    { id: 5, source: require("../assets/tshirt.jpeg") },
-    { id: 6, source: require("../assets/ashtshirt.jpeg") },
-    { id: 7, source: require("../assets/tshirt.jpeg") },
-    { id: 8, source: require("../assets/ashtshirt.jpeg") },
+  { id: 1, source: require("../assets/bluetshirt.jpeg") },
+  { id: 2, source: require("../assets/redtshirt.webp") },
+  { id: 3, source: require("../assets/tshirt.jpeg") },
+  { id: 4, source: require("../assets/ashtshirt.jpeg") },
+  { id: 5, source: require("../assets/tshirt.jpeg") },
+  { id: 6, source: require("../assets/ashtshirt.jpeg") },
+  { id: 7, source: require("../assets/tshirt.jpeg") },
+  { id: 8, source: require("../assets/ashtshirt.jpeg") },
   // ...add as many items as you need
 ];
 
@@ -36,19 +36,23 @@ const CARD_WIDTH = "47%";
 const CARD_HEIGHT = 200;
 const MIN_ITEMS_CONTAINER_HEIGHT = "70%";
 
-const MyClosetScreen = () => {
+const MyClosetScreen = ({ navigation }) => {
+  const handleAddItems = () => {
+    navigation.navigate("camera");
+  };
   const renderContent = () => {
     if (items.length === 0) {
       return (
-        <View style={styles.watermarkContainer}>
+        <TouchableOpacity style={styles.watermarkContainer}>
           <IconButton
             icon="plus"
             size={48}
             style={styles.watermarkIcon}
             color="#cccccc"
+            onPress={handleAddItems}
           />
           <Text style={styles.watermarkText}>Add your clothes</Text>
-        </View>
+        </TouchableOpacity>
       );
     } else {
       return items.map((item) => (
@@ -63,7 +67,7 @@ const MyClosetScreen = () => {
       <Appbar.Header style={styles.appBar}>
         <Appbar.Content title="My Closet" titleStyle={styles.appBarTitle} />
         <View style={styles.actionButtonContainer}>
-          <TouchableOpacity onPress={() => {}} style={styles.actionButton}>
+          <TouchableOpacity onPress={handleAddItems} style={styles.actionButton}>
             <Appbar.Action icon="plus" color={styles.appBarAction.color} />
           </TouchableOpacity>
         </View>
@@ -153,16 +157,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 50
+    paddingTop: 50,
   },
   watermarkIcon: {
-    backgroundColor: "#e0e0e0", 
-    borderRadius: 24, 
+    backgroundColor: "#e0e0e0",
+    borderRadius: 24,
   },
   watermarkText: {
     color: "#cccccc",
     fontSize: 16,
-    marginTop: 10, 
+    marginTop: 10,
   },
 });
 

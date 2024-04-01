@@ -5,6 +5,7 @@ import HomeScreen from "./screens/home";
 import SignInScreen from "./screens/signIn";
 import RegisterScreen from "./screens/register";
 import MyClosetScreen from "./screens/closet";
+import CameraScreen from "./screens/camera";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,7 +25,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
 
-      <Stack.Screen
+        <Stack.Screen
           name="register"
           component={RegisterScreen}
           options={{ headerShown: false }}
@@ -38,6 +39,11 @@ export default function App() {
         <Stack.Screen
           name="closet"
           component={MyClosetScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="camera"
+          component={CameraScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
