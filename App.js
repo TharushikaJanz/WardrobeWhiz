@@ -4,6 +4,7 @@ import WelcomeScreen from "./screens/welcome";
 import HomeScreen from "./screens/home";
 import SignInScreen from "./screens/signIn";
 import RegisterScreen from "./screens/register";
+import MyClosetScreen from "./screens/closet";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,11 @@ export default function App() {
         <Stack.Screen
           name="home"
           component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="closet"
+          component={MyClosetScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

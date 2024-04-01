@@ -8,6 +8,10 @@ const SignInScreen = ({navigation}) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
+  const handleLogin = (user = 'Tharushika') => {
+    navigation.navigate('home')
+  }
+
   return (
     <KeyboardAvoidingView 
       style={styles.container} 
@@ -41,7 +45,7 @@ const SignInScreen = ({navigation}) => {
         </TouchableOpacity>
         <Button
           mode="elevated"
-          onPress={() => console.log('Pressed')}
+          onPress={handleLogin}
           style={styles.button}
           labelStyle={styles.buttonText}
         >
