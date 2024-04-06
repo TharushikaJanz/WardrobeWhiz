@@ -7,6 +7,7 @@ import RegisterScreen from "./screens/register";
 import MyClosetScreen from "./screens/closet";
 import CameraScreen from "./screens/camera";
 import SimilarItemsGeneratorScreen from "./screens/similarItems";
+import PairingItemsGeneratingScreen from "./screens/pairngItemsGenerator";
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +51,11 @@ export default function App() {
          <Stack.Screen
           name="similar-items-generator"
           component={SimilarItemsGeneratorScreen}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="pairing-items-generator"
+          component={PairingItemsGeneratingScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
