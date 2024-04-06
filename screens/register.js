@@ -3,7 +3,7 @@ import { View, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, Scr
 import { TextInput, Button, Text } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const RegisterScreen = ({navigation}) => {
+const RegisterScreen = ({ navigation }) => {
   const [fullName, setFullName] = React.useState('');
   const [phone, setPhone] = React.useState('');
   const [email, setEmail] = React.useState('');
@@ -11,8 +11,8 @@ const RegisterScreen = ({navigation}) => {
   const [confirmPassword, setConfirmPassword] = React.useState('');
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
+    <KeyboardAvoidingView
+      style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.innerContainer}>
@@ -20,55 +20,50 @@ const RegisterScreen = ({navigation}) => {
         <TextInput
           label="Full Name"
           value={fullName}
-          onChangeText={text => setFullName(text)}
+          onChangeText={(text) => setFullName(text)}
           mode="flat"
-          underlineColor='#fff'
+          underlineColor="#fff"
           style={styles.input}
           theme={{ colors: { primary: '#765952', underlineColor: 'transparent' } }}
-        //   left={<FontAwesome5 name="camera" />}
         />
         <TextInput
           label="Phone No"
           value={phone}
-          onChangeText={text => setPhone(text)}
+          onChangeText={(text) => setPhone(text)}
           mode="flat"
-          underlineColor='#fff'
+          underlineColor="#fff"
           style={styles.input}
           theme={{ colors: { primary: '#765952', underlineColor: 'transparent' } }}
           keyboardType="phone-pad"
-        //   left={<TextInput.Icon name="phone-outline" />} 
         />
         <TextInput
           label="Email"
           value={email}
-          onChangeText={text => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
           mode="flat"
-          underlineColor='#fff'
+          underlineColor="#fff"
           style={styles.input}
           theme={{ colors: { primary: '#765952', underlineColor: 'transparent' } }}
-        //   left={<TextInput.Icon name="email-outline" />} 
         />
         <TextInput
           label="Password"
           value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={(text) => setPassword(text)}
           mode="flat"
-          underlineColor='#fff'
+          underlineColor="#fff"
           secureTextEntry
           style={styles.input}
           theme={{ colors: { primary: '#765952', underlineColor: 'transparent' } }}
-        //   right={<TextInput.Icon name="eye-off-outline" />} // Assuming you are using Material Community Icons
         />
         <TextInput
           label="Confirm Password"
           value={confirmPassword}
-          onChangeText={text => setConfirmPassword(text)}
+          onChangeText={(text) => setConfirmPassword(text)}
           mode="flat"
-          underlineColor='#fff'
+          underlineColor="#fff"
           secureTextEntry
           style={styles.input}
           theme={{ colors: { primary: '#765952', underlineColor: 'transparent' } }}
-        //   right={<TextInput.Icon name="eye-off-outline" />} 
         />
         <Button
           mode="elevated"
@@ -96,7 +91,7 @@ const styles = StyleSheet.create({
   innerContainer: {
     flexGrow: 1,
     justifyContent: 'center',
-    padding: 25,
+    paddingHorizontal: '5%',
   },
   title: {
     fontSize: 30,
@@ -108,7 +103,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: '#fff',
     marginBottom: 20,
-    elevation: 4
+    elevation: 4,
   },
   button: {
     marginTop: 40,
@@ -130,7 +125,7 @@ const styles = StyleSheet.create({
   signInButtonText: {
     fontWeight: 'bold',
     color: '#765952',
-    fontSize: 16
+    fontSize: 16,
   },
 });
 

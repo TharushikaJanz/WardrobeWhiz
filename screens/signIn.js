@@ -4,17 +4,17 @@ import { TextInput, Button, Text } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from "@expo/vector-icons";
 
-const SignInScreen = ({navigation}) => {
+const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-  const handleLogin = (user = 'Tharushika') => {
-    navigation.navigate('home')
-  }
+  const handleLogin = () => {
+    navigation.navigate('home');
+  };
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
+    <KeyboardAvoidingView
+      style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.innerContainer}>
@@ -22,23 +22,22 @@ const SignInScreen = ({navigation}) => {
         <TextInput
           label="Email"
           value={email}
-          onChangeText={text => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
           mode="flat"
-          underlineColor='#fff'
+          underlineColor="#fff"
           style={styles.input}
           theme={{ colors: { primary: '#765952', underlineColor: 'transparent' } }}
-          // left={<TextInput.Icon name={() => <FontAwesome5 name="envelope" size={20} color= '#000'/>} />}
         />
         <TextInput
           label="Password"
           value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={(text) => setPassword(text)}
           mode="flat"
-          underlineColor='#fff'
+          underlineColor="#fff"
           secureTextEntry
           style={styles.input}
           theme={{ colors: { primary: '#765952', underlineColor: 'transparent' } }}
-          right={<TextInput.Icon name="eye-off-outline" />} // Assuming you are using Material Community Icons
+          right={<TextInput.Icon name="eye-off-outline" />} 
         />
         <TouchableOpacity style={styles.forgotPassword}>
           <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
-    paddingHorizontal: 25,
+    paddingHorizontal: '5%',
     justifyContent: 'center',
   },
   title: {
@@ -77,12 +76,12 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     alignSelf: 'center',
     letterSpacing: 1,
-    color: '#000', 
+    color: '#000',
   },
   input: {
     marginBottom: 15,
     backgroundColor: '#fff',
-    elevation: 4
+    elevation: 4,
   },
   button: {
     marginTop: 30,
@@ -103,8 +102,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   signUp: {
-    // marginTop: 30,
-    // alignItems: 'center',
     position: 'absolute',
     bottom: 25,
     alignSelf: 'center',
@@ -122,3 +119,4 @@ const styles = StyleSheet.create({
 });
 
 export default SignInScreen;
+

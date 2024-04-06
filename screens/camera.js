@@ -1,57 +1,55 @@
-import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
-import { Camera } from "expo-camera";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import * as MediaLibrary from "expo-media-library";
+import * as ImagePicker from "expo-image-picker";
 import { IconButton, Button } from "react-native-paper";
+import CustomModal from "./components/custom-modal";
 
 const CameraScreen = () => {
-  const cameraRef = useRef(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [image, setImage] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
-  const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
+  const [showModal, setShowModal] = useState(false);
+  const [showImageOptions, setShowImageOptions] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const cameraStatus = await Camera.requestCameraPermissionsAsync();
-      const microphoneStatus = await Camera.requestMicrophonePermissionsAsync();
+      const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
       const mediaLibraryStatus = await MediaLibrary.requestPermissionsAsync();
       setHasPermission(
         cameraStatus.status === "granted" &&
-          microphoneStatus.status === "granted" &&
           mediaLibraryStatus.status === "granted"
       );
     })();
   }, []);
 
-  const takePicture = async () => {
-    if (cameraRef.current) {
-      try {
-        //   const options = { quality: 0.5, base64: true };
-        const data = await cameraRef.current.takePictureAsync();
-        console.log(data);
-        console.log(data.uri);
-        setImage(data.uri);
-      } catch (e) {
-        console.log(e);
-      }
-
-      // Save to gallery if necessary
-      //   await MediaLibrary.createAssetAsync(data.uri);
+  const handleImageResult = async (result) => {
+    if (!result.cancelled) {
+      console.log("URI before saving:", result.assets[0].uri);
+      setImage(result.assets[0].uri);
+      setShowImageOptions(true);
     }
   };
 
-  const saveImage =async () => {
-    if(image){
-        try{
-            await MediaLibrary.createAssetAsync(image);
-            alert('Image saved successfully!')
-            setImage(null)
-        } catch (e) {
-            console.log(e);
-        }
-    }
-  }
+  const takePicture = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    await handleImageResult(result);
+    setShowModal(false);
+  };
+
+  const pickImageAndUpload = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    await handleImageResult(result);
+    setShowModal(false);
+  };
 
   if (hasPermission === null) {
     return <View />;
@@ -64,54 +62,58 @@ const CameraScreen = () => {
     <View style={styles.container}>
       <View style={styles.cameraContainer}>
         {!image ? (
-          <Camera
-            ref={cameraRef}
-            style={styles.preview}
-            type={type}
-            flashMode={flash}
-          />
+          <Text style={styles.placeholderText}>No Image Selected</Text>
         ) : (
           <Image source={{ uri: image }} style={styles.imageContainer} />
         )}
       </View>
-      <View style={styles.buttonContainer}>
-        {image ? (
-          <View style={styles.imageButtonsContainer}>
-            <Button
-              icon="refresh"
-              mode="elevated"
-              buttonColor="#765952"
-              style={{ borderRadius: 0, marginRight: 40 }}
-              uppercase={true}
-              labelStyle={{ fontSize: 15 }}
-              textColor="#fff"
-              onPress={() => setImage(null)}
-            >
-              Re-take
-            </Button>
-            <Button
-              icon="check"
-              mode="elevated"
-              buttonColor="#765952"
-              style={{ borderRadius: 0 }}
-              uppercase={true}
-              labelStyle={{ fontSize: 15 }}
-              textColor="#fff"
-              onPress={saveImage}
-            >
-              Save
-            </Button>
-          </View>
-        ) : (
-          <IconButton
+      {showImageOptions && (
+        <View style={styles.buttonContainer}>
+          <Button
+            icon="magnify"
+            mode="elevated"
+            buttonColor="#765952"
+            style={{ borderRadius: 0, marginBottom: 20 }}
+            uppercase={true}
+            labelStyle={{ fontSize: 15 }}
+            textColor="#fff"
+            onPress={() => {
+              console.log("Checking for similar items...");
+            }}
+          >
+            Check for Similar Items
+          </Button>
+          <Button
             icon="camera"
-            size={50}
-            color="white"
-            onPress={takePicture}
-            style={styles.captureButton}
-          />
-        )}
-      </View>
+            mode="elevated"
+            buttonColor="#fff"
+            style={{ borderRadius: 0, borderColor: "#765952", borderWidth: 0.5}}
+            uppercase={true}
+            labelStyle={{ fontSize: 15 }}
+            textColor="#000"
+            onPress={() => {
+              setShowImageOptions(false);
+              setShowModal(true);
+            }}
+          >
+            Retake Image
+          </Button>
+        </View>
+      )}
+      {!showImageOptions && (
+        <TouchableOpacity
+          onPress={() => setShowModal(true)}
+          style={styles.captureButton}
+        >
+          <IconButton icon="camera" size={50} />
+        </TouchableOpacity>
+      )}
+      <CustomModal
+        visible={showModal}
+        onClose={() => setShowModal(false)}
+        onTakePicture={takePicture}
+        onPickImageAndUpload={pickImageAndUpload}
+      />
     </View>
   );
 };
@@ -127,36 +129,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fff",
   },
+  buttonContainer: {
+    padding: 10,
+    marginBottom: 20,
+    marginHorizontal: "5%",
+    width: "90%", 
+  },
   imageContainer: {
     width: "90%",
-    height: "100%",
+    height: "70%", 
     alignSelf: "center",
     marginTop: "auto",
     marginBottom: "auto",
     resizeMode: "contain",
   },
-  preview: {
-    width: "100%",
-    height: "100%",
-  },
-  buttonContainer: {
-    flex: 1,
-    backgroundColor: "#000",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  imageButtonsContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 10
+  placeholderText: {
+    fontSize: 18,
+    color: "#999",
   },
   captureButton: {
-    margin: 20,
+    margin: 18,
+    padding: 4,
+    alignSelf: "center",
+    borderRadius: 50,
     backgroundColor: "#F8F0E3",
+    elevation: 2,
   },
 });
+
 
 export default CameraScreen;
