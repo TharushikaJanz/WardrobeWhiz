@@ -5,7 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import { IconButton, Button } from "react-native-paper";
 import CustomModal from "./components/custom-modal";
 
-const CameraScreen = () => {
+const CameraScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [image, setImage] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -21,6 +21,36 @@ const CameraScreen = () => {
       );
     })();
   }, []);
+
+  const handleCheckSimilarItems = () => {
+    if (image) {
+      // Send the current cropped image URL to the Similar Images screen
+      navigation.navigate("similar-items-generator", { imageUrl: image });
+    } else {
+      console.log("No image selected.");
+    }
+  };
+
+  const handleAddToMyCloset = async () => {
+    // Send the current cropped image URL to your backend here
+    if (image) {
+      try {
+        // Example of sending the image URL using fetch
+        const response = await fetch("YOUR_BACKEND_API_URL", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ imageUrl: image }),
+        });
+        const data = await response.json();
+        console.log("Image URL sent to backend:", data);
+      } catch (error) {
+        console.error("Error sending image URL to backend:", error);
+      }
+    }
+    navigation.navigate("closet");
+  };
 
   const handleImageResult = async (result) => {
     if (!result.cancelled) {
@@ -70,6 +100,21 @@ const CameraScreen = () => {
       {showImageOptions && (
         <View style={styles.buttonContainer}>
           <Button
+            icon="plus"
+            mode="elevated"
+            buttonColor="#765952"
+            style={{ borderRadius: 0, marginBottom: 20 }}
+            uppercase={true}
+            labelStyle={{ fontSize: 15 }}
+            textColor="#fff"
+            onPress={() => {
+              handleAddToMyCloset();
+              console.log("Added to your closet...");
+            }}
+          >
+            Add to my closet
+          </Button>
+          <Button
             icon="magnify"
             mode="elevated"
             buttonColor="#765952"
@@ -78,6 +123,7 @@ const CameraScreen = () => {
             labelStyle={{ fontSize: 15 }}
             textColor="#fff"
             onPress={() => {
+              handleCheckSimilarItems();
               console.log("Checking for similar items...");
             }}
           >
@@ -87,7 +133,11 @@ const CameraScreen = () => {
             icon="camera"
             mode="elevated"
             buttonColor="#fff"
-            style={{ borderRadius: 0, borderColor: "#765952", borderWidth: 0.5}}
+            style={{
+              borderRadius: 0,
+              borderColor: "#765952",
+              borderWidth: 0.5,
+            }}
             uppercase={true}
             labelStyle={{ fontSize: 15 }}
             textColor="#000"
@@ -133,11 +183,11 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
     marginHorizontal: "5%",
-    width: "90%", 
+    width: "90%",
   },
   imageContainer: {
     width: "90%",
-    height: "70%", 
+    height: "70%",
     alignSelf: "center",
     marginTop: "auto",
     marginBottom: "auto",
@@ -156,6 +206,5 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
 });
-
 
 export default CameraScreen;
