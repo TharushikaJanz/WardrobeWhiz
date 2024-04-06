@@ -9,23 +9,28 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate('closet')
   }
 
+  const handlePurchaseItemButton= () => {
+    navigation.navigate('camera')
+  }
+
   const buttons = [
     {
       title: "My Closet",
       onPress: handleMyClosetButton,
-      // image: require('../assets/my_closet_image.jpg'),
+      backgroundColor: "#C0804019", // Caramel with 40% opacity
     },
     {
       title: "Purchase Item",
-      onPress: () => console.log("Purchase Item"),
-      // image: require('../assets/purchase_item_image.jpg'),
+      onPress: handlePurchaseItemButton,
+      backgroundColor: "#B4653519", // Carob with 40% opacity
     },
     {
       title: "Outfit Recommendation",
       onPress: () => console.log("Outfit Recommendation"),
-      // image: require('../assets/outfit_recommendation_image.jpg'),
+      backgroundColor: "#D8A06006", // Umber with 40% opacity
     },
   ];
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -44,13 +49,10 @@ const HomeScreen = ({ navigation }) => {
           <TouchableOpacity
             key={index}
             onPress={button.onPress}
-            // activeOpacity={0.7}
             style={styles.touchable}
           >
-            <Card style={styles.card}>
-              {/* <ImageBackground source={button.image} style={styles.imageBackground}> */}
+            <Card style={[styles.card, { backgroundColor: button.backgroundColor }]}>
               <Text style={styles.buttonText}>{button.title}</Text>
-              {/* </ImageBackground> */}
             </Card>
           </TouchableOpacity>
         ))}
@@ -76,7 +78,6 @@ const styles = StyleSheet.create({
   userName: {
     fontWeight: "600", 
     fontStyle: "italic",
-    // textTransform: "uppercase",
     letterSpacing: 1.5,
     marginTop: 8,
   },
@@ -85,9 +86,12 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    borderRadius: 8,
+    borderRadius: 6,
+    borderColor: "#765952",
     justifyContent: "center",
     alignItems: "center",
+    height: 125,
+    // marginVertical: 20,
   },
   touchable: {
     borderRadius: 8,
@@ -95,11 +99,6 @@ const styles = StyleSheet.create({
     height: 125,
     marginVertical: 20,
   },
-  // imageBackground: {
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   padding: 16,
-  // },
   buttonText: {
     color: "#000",
     fontSize: 18,
