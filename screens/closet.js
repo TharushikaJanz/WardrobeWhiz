@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -9,15 +9,6 @@ import {
 } from "react-native";
 import { Appbar, Card, IconButton } from "react-native-paper";
 
-const categories = [
-  "Shirts",
-  "T-Shirts",
-  "Frocks",
-  "Trousers",
-  "Shorts",
-  "Jeans",
-  "Jackets",
-];
 
 // Dummy images data
 const items = [
@@ -37,9 +28,38 @@ const CARD_HEIGHT = 200;
 const MIN_ITEMS_CONTAINER_HEIGHT = "70%";
 
 const MyClosetScreen = ({ navigation }) => {
+  const [categories, setCategories] = useState([]);
+
+  // Fetch categories from the backend
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("https://wardrobe-5hru.onrender.com/api/image/categories", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Fetching categories failed");
+      }
+
+      const data = await response.json();
+      console.log({data})
+      setCategories(data.categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   const handleAddItems = () => {
     navigation.navigate("camera");
   };
+
   const renderContent = () => {
     if (items.length === 0) {
       return (
@@ -67,7 +87,10 @@ const MyClosetScreen = ({ navigation }) => {
       <Appbar.Header style={styles.appBar}>
         <Appbar.Content title="My Closet" titleStyle={styles.appBarTitle} />
         <View style={styles.actionButtonContainer}>
-          <TouchableOpacity onPress={handleAddItems} style={styles.actionButton}>
+          <TouchableOpacity
+            onPress={handleAddItems}
+            style={styles.actionButton}
+          >
             <Appbar.Action icon="plus" color={styles.appBarAction.color} />
           </TouchableOpacity>
         </View>

@@ -16,28 +16,27 @@ const MIN_ITEMS_CONTAINER_HEIGHT = "70%";
 
 const PairingItemsGeneratingScreen = ({ route, navigation }) => {
   const { imageUrl } = route.params;
-// const [matchinItems, setMatchingItems] = useState([]);
+  // const [matchinItems, setMatchingItems] = useState([]);
 
-//   useEffect(() => {
-//     const fetchSimilarItems = async () => {
-//       try {
-//         const response = await fetch("YOUR_BACKEND_API_URL", {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({ imageUrl }),
-//         });
-//         const data = await response.json();
-//         setItems(data.items); // Assuming your backend returns a list of items
-//       } catch (error) {
-//         console.error("Error fetching similar items:", error);
-//       }
-//     };
+  //   useEffect(() => {
+  //     const fetchSimilarItems = async () => {
+  //       try {
+  //         const response = await fetch("YOUR_BACKEND_API_URL", {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify({ imageUrl }),
+  //         });
+  //         const data = await response.json();
+  //         setItems(data.items); // Assuming your backend returns a list of items
+  //       } catch (error) {
+  //         console.error("Error fetching similar items:", error);
+  //       }
+  //     };
 
-//     fetchSimilarItems();
-//   }, [imageUrl]);
-
+  //     fetchSimilarItems();
+  //   }, [imageUrl]);
 
   // Dummy images data
   const matchinItems = [
@@ -49,9 +48,12 @@ const PairingItemsGeneratingScreen = ({ route, navigation }) => {
     { id: 6, source: { uri: imageUrl } },
   ];
 
-
   const handleAddItems = () => {
     navigation.navigate("camera");
+  };
+
+  const tryAnotherItem = () => {
+    navigation.goBack();
   };
 
   const renderContent = () => {
@@ -68,7 +70,7 @@ const PairingItemsGeneratingScreen = ({ route, navigation }) => {
             textColor="#000"
             onPress={handleAddItems}
           >
-            Try a new Item
+            Try Another Item
           </Button>
           <Text style={styles.watermarkText}>
             There's no pairing items in your closet to this item
@@ -101,9 +103,24 @@ const PairingItemsGeneratingScreen = ({ route, navigation }) => {
         </View>
       </Appbar.Header>
 
-      <View style={styles.imageContainer}>
-        <Image source={{ uri: imageUrl }} style={styles.uploadedImage} />
-        <Text style={styles.uploadedItemText}>Item You Uploaded</Text>
+      <View style={styles.contentContainer}>
+        <Card style={styles.imageCard}>
+          <Card.Cover source={{ uri: imageUrl }} style={styles.cardImage} />
+        </Card>
+
+        <View style={styles.tryAnotherContainer}>
+          <Button
+            icon="camera"
+            mode="elevated"
+            buttonColor="#765952"
+            style={{ borderRadius: 0, marginBottom: 20 }}
+            labelStyle={{ fontSize: 15 }}
+            textColor="#fff"
+            onPress={tryAnotherItem}
+          >
+            Try Another Item
+          </Button>
+        </View>
       </View>
 
       <ScrollView style={styles.cardScrollView}>
@@ -147,7 +164,6 @@ const styles = StyleSheet.create({
     width: "80%",
     height: 200,
     resizeMode: "cover",
-    borderRadius: 8,
   },
   uploadedItemText: {
     marginTop: 10,
@@ -206,7 +222,34 @@ const styles = StyleSheet.create({
     color: "#cccccc",
     fontSize: 20,
     marginTop: 10,
-    textAlign: 'center'
+    textAlign: "center",
+  },
+
+  contentContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginHorizontal: 10,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  imageCard: {
+    width: "47%",
+    height: CARD_HEIGHT,
+  },
+  cardImage: {
+    height: "100%",
+    resizeMode: "cover",
+    elevation: 4,
+    borderRadius: 0,
+    borderWidth: 3,
+    borderColor: "#000",
+  },
+  tryAnotherContainer: {
+    width: "47%",
+    height: CARD_HEIGHT,
+    justifyContent: "center",
+    padding: 10,
   },
 });
 

@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { TextInput, Button, Text } from "react-native-paper";
-import { FontAwesome5 } from "@expo/vector-icons";
+import axios from "axios";
 
 const RegisterScreen = ({ navigation }) => {
   const [fullName, setFullName] = React.useState("");
@@ -19,29 +19,28 @@ const RegisterScreen = ({ navigation }) => {
 
   const handleRegister = async () => {
     try {
-      const response = await fetch("YOUR_BACKEND_API_URL/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await axios.post(
+        "https://wardrobe-5hru.onrender.com/api/auth/register",
+        {
           fullName,
           phone,
           email,
           password,
           confirmPassword,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to register");
-      }
-
-      // Navigate to the login screen after successful registration
+        }
+      );
       navigation.navigate("signIn");
     } catch (error) {
       console.error("Error registering user:", error);
-      // Handle registration failure, e.g., show an error message to the user
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log("Error", error.message);
+      }
     }
   };
 

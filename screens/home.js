@@ -5,28 +5,32 @@ import { Card, Text } from "react-native-paper";
 const HomeScreen = ({ navigation }) => {
   const userName = "Tharushika";
 
-  const handleMyClosetButton= () => {
+  const handleMyCloset= () => {
     navigation.navigate('closet')
   }
 
-  const handlePurchaseItemButton= () => {
+  const handlePurchaseItem= () => {
     navigation.navigate('camera')
+  }
+
+  const handleOutfitRecommendation= () => {
+    navigation.navigate('outfit-generator')
   }
 
   const buttons = [
     {
       title: "My Closet",
-      onPress: handleMyClosetButton,
+      onPress: handleMyCloset,
       backgroundColor: "#C0804019", // Caramel with 40% opacity
     },
     {
       title: "Purchase Item",
-      onPress: handlePurchaseItemButton,
+      onPress: handlePurchaseItem,
       backgroundColor: "#B4653519", // Carob with 40% opacity
     },
     {
       title: "Outfit Recommendation",
-      onPress: () => console.log("Outfit Recommendation"),
+      onPress: handleOutfitRecommendation,
       backgroundColor: "#D8A06006", // Umber with 40% opacity
     },
   ];

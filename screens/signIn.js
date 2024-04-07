@@ -15,31 +15,35 @@ const SignInScreen = ({ navigation }) => {
   const [password, setPassword] = React.useState("");
 
   const handleLogin = async () => {
-    try {
-      const response = await fetch("YOUR_BACKEND_API_URL/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+    // try {
+    //   const response = await fetch(
+    //     "https://wardrobe-5hru.onrender.com/api/auth/login",
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({ email, password }),
+    //     }
+    //   );
 
-      if (!response.ok) {
-        throw new Error("Failed to login");
-      }
-      const data = await response.json();
-      const success = data.success;
+    //   if (!response.ok) {
+    //     throw new Error("Failed to login");
+    //   }
+    //   const data = await response.json();
+    //   const success = data.success;
 
-      if (success) {
-        // Navigate to the home screen after successful login
-        navigation.navigate("home");
-      } else {
-        // Handle login failure, e.g., show an error message to the user
-        console.error("Login failed");
-      }
-    } catch (error) {
-      console.error("Error logging in:", error);
-    }
+    //   if (success) {
+    //     // Navigate to the home screen after successful login
+    //     navigation.navigate("home");
+    //   } else {
+    //     // Handle login failure, e.g., show an error message to the user
+    //     console.error("Login failed");
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    // }
+     navigation.navigate("home");
   };
 
   return (
