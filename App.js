@@ -8,6 +8,8 @@ import MyClosetScreen from "./screens/closet";
 import CameraScreen from "./screens/camera";
 import SimilarItemsGeneratorScreen from "./screens/similarItems";
 import PairingItemsGeneratingScreen from "./screens/pairngItemsGenerator";
+import OutfitGeneratorScreen from "./screens/outfitGenerator";
+import CreateOutfitsScreen from "./screens/createOutfits";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,14 +50,24 @@ export default function App() {
           component={CameraScreen}
           options={{ headerShown: false }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="similar-items-generator"
           component={SimilarItemsGeneratorScreen}
           options={{ headerShown: false }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="pairing-items-generator"
           component={PairingItemsGeneratingScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="outfit-generator"
+          component={OutfitGeneratorScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="create-outfits"
+          component={CreateOutfitsScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
