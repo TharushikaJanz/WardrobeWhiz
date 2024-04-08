@@ -103,7 +103,7 @@ const CameraScreen = ({ navigation }) => {
         });
 
         const response = await fetch(
-          "https://wardrobe-5hru.onrender.com/api/image/classify",
+          "http://192.168.1.2:5000/api/image/classify",
           {
             method: "POST",
             body: formData,

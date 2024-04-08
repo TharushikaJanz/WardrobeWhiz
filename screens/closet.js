@@ -5,83 +5,120 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  Text,
 } from "react-native";
-import { Appbar, Card, IconButton } from "react-native-paper";
+import { Appbar} from "react-native-paper";
+import SegmentedControlTab from "react-native-segmented-control-tab";
+import axios from "axios";
+import renderContent from "./components/render-content";
+import renderOptions from "./components/render-options";
 
-
-// Dummy images data
-const items = [
-  { id: 1, source: require("../assets/bluetshirt.jpeg") },
-  { id: 2, source: require("../assets/redtshirt.webp") },
-  { id: 3, source: require("../assets/tshirt.jpeg") },
-  { id: 4, source: require("../assets/ashtshirt.jpeg") },
-  { id: 5, source: require("../assets/tshirt.jpeg") },
-  { id: 6, source: require("../assets/ashtshirt.jpeg") },
-  { id: 7, source: require("../assets/tshirt.jpeg") },
-  { id: 8, source: require("../assets/ashtshirt.jpeg") },
-  // ...add as many items as you need
-];
-
-const CARD_WIDTH = "47%";
-const CARD_HEIGHT = 200;
 const MIN_ITEMS_CONTAINER_HEIGHT = "70%";
 
 const MyClosetScreen = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
+  const [colors, setColors] = useState([]);
+  const [selectedSegmentIndex, setSelectedSegmentIndex] = useState(0);
+  const [items, setItems] = useState([]);
 
-  // Fetch categories from the backend
-  const fetchCategories = async () => {
+  // Fetch items from the backend
+  const fetchItems = async () => {
     try {
-      const response = await fetch("https://wardrobe-5hru.onrender.com/api/image/categories", {
-        method: "GET",
+      const response = await axios.get("http://192.168.1.2:5000/api/image/", {
+        params: {
+          page: 1,
+          per_page: 10,
+        },
         headers: {
           "Content-Type": "application/json",
         },
       });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
+        throw new Error("Fetching items failed");
+      }
+      console.log(response.data);
+      // setItems(response.data.images);
+      setItems(
+        response.data.images.map((imageId) => ({
+          id: imageId,
+          source: `http://192.168.1.2:5000/images/${imageId}.jpg`,
+        }))
+      );
+    } catch (error) {
+      console.error("Error fetching items:", error);
+    }
+  };
+
+  // Fetch categories from the backend
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(
+        "http://192.168.1.2:5000/api/image/categories",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status !== 200) {
         throw new Error("Fetching categories failed");
       }
 
-      const data = await response.json();
-      console.log({data})
+      const data = response.data;
+      console.log({ data });
       setCategories(data.categories);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
   };
 
+  //Fetch colors from the backend
+  const fetchColors = async () => {
+    try {
+      const response = await axios.get(
+        "http://192.168.1.2:5000/api/image/colors",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Fetching colors failed");
+      }
+
+      const data = response.data;
+      console.log({ data });
+      setColors(data.colors);
+    } catch (error) {
+      console.error("Error fetching colors:", error);
+    }
+  };
+
   useEffect(() => {
+    fetchItems();
     fetchCategories();
+    // fetchColors();
   }, []);
+
+  const handleTabChange = async (index) => {
+    setSelectedSegmentIndex(index);
+    if (index === 0) {
+      fetchCategories();
+    } else if (index === 1) {
+      fetchColors();
+    }
+  };
 
   const handleAddItems = () => {
     navigation.navigate("camera");
   };
 
-  const renderContent = () => {
-    if (items.length === 0) {
-      return (
-        <TouchableOpacity style={styles.watermarkContainer}>
-          <IconButton
-            icon="plus"
-            size={48}
-            style={styles.watermarkIcon}
-            color="#cccccc"
-            onPress={handleAddItems}
-          />
-          <Text style={styles.watermarkText}>Add your clothes</Text>
-        </TouchableOpacity>
-      );
-    } else {
-      return items.map((item) => (
-        <Card key={item.id} style={styles.card}>
-          <Card.Cover source={item.source} />
-        </Card>
-      ));
-    }
-  };
+  const content = renderContent(items, handleAddItems);
+  const options = renderOptions(selectedSegmentIndex, categories, colors);
+
   return (
     <SafeAreaView style={styles.container}>
       <Appbar.Header style={styles.appBar}>
@@ -95,20 +132,29 @@ const MyClosetScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </Appbar.Header>
+      <View style={styles.segmentedControlContainer}>
+        <SegmentedControlTab
+          values={["Categories", "Colors"]}
+          selectedIndex={selectedSegmentIndex}
+          onTabPress={handleTabChange}
+          tabsContainerStyle={styles.segmentedControl}
+          tabStyle={styles.segmentedControlTab}
+          activeTabStyle={styles.segmentedControlActiveTab}
+          tabTextStyle={styles.segmentedControlTabText}
+          activeTabTextStyle={styles.segmentedControlActiveTabText}
+        />
+      </View>
+
       <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.categoryScrollContainer}
       >
-        {categories.map((category, index) => (
-          <TouchableOpacity key={index} style={styles.categoryIcon}>
-            <Text style={styles.categoryText}>{category}</Text>
-          </TouchableOpacity>
-        ))}
+        {options}
       </ScrollView>
 
       <ScrollView style={styles.cardScrollView}>
-        <View style={styles.itemsContainer}>{renderContent()}</View>
+        <View style={styles.itemsContainer}>{content}</View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -132,7 +178,6 @@ const styles = StyleSheet.create({
   actionButton: {
     backgroundColor: "#000",
   },
-
   appBarTitle: {
     color: "#F5F5F5",
     fontWeight: "bold",
@@ -140,56 +185,40 @@ const styles = StyleSheet.create({
   appBarAction: {
     color: "#fff",
   },
+  segmentedControlContainer: {
+    paddingVertical: 15,
+  },
+  segmentedControl: {
+    marginHorizontal: 20,
+  },
+  segmentedControlTab: {
+    borderColor: "#4B371C",
+    borderWidth: 1,
+    paddingVertical: 10,
+  },
+  segmentedControlActiveTab: {
+    backgroundColor: "#4B371C",
+  },
+  segmentedControlTabText: {
+    color: "#4B371C",
+    fontWeight: "bold",
+  },
+  segmentedControlActiveTabText: {
+    color: "#F5F5F5",
+  },
   categoryScrollContainer: {
     alignItems: "center",
     paddingVertical: 20,
   },
-  categoryIcon: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 10,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "#F8F0E3",
-    elevation: 4,
-  },
-  categoryText: {
-    textAlign: "center",
-    color: "#4A3728",
-    fontWeight: "bold",
-  },
+
   cardScrollView: {
     minHeight: MIN_ITEMS_CONTAINER_HEIGHT,
   },
-
   itemsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
     padding: 10,
-  },
-  card: {
-    marginBottom: 10,
-    elevation: 4,
-    backgroundColor: "#F8F0E3",
-    width: CARD_WIDTH,
-    height: CARD_HEIGHT,
-  },
-  watermarkContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: 50,
-  },
-  watermarkIcon: {
-    backgroundColor: "#e0e0e0",
-    borderRadius: 24,
-  },
-  watermarkText: {
-    color: "#cccccc",
-    fontSize: 16,
-    marginTop: 10,
   },
 });
 
