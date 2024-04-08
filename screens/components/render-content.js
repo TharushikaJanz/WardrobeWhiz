@@ -1,11 +1,18 @@
 import React from "react";
 import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
-import { IconButton } from "react-native-paper";
+import { ActivityIndicator, IconButton } from "react-native-paper";
 
 const CARD_WIDTH = "47%";
 const CARD_HEIGHT = 200;
 
-const renderContent = (items, handleAddItems) => {
+const renderContent = (items, handleAddItems, isLoading) => {
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size={60} animating={true} color="#765952" />
+      </View>
+    );
+  }
   if (items.length === 0) {
     return (
       <TouchableOpacity
@@ -56,6 +63,12 @@ const styles = StyleSheet.create({
     color: "#cccccc",
     fontSize: 16,
     marginTop: 10,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 60,
   },
 });
 

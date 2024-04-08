@@ -5,11 +5,10 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  ActivityIndicator,
 } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
-import { IconButton, Button } from "react-native-paper";
+import { IconButton, Button, ActivityIndicator } from "react-native-paper";
 import CustomModal from "./components/custom-modal";
 
 const CameraScreen = ({ navigation }) => {
@@ -172,7 +171,7 @@ const CameraScreen = ({ navigation }) => {
       </View>
       {uploading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#765952" />
+          <ActivityIndicator size={60} animating={true} color="#765952" />
         </View>
       ) : (
         showImageOptions && (

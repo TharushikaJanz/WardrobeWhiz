@@ -21,6 +21,7 @@ const MyClosetScreen = ({ navigation }) => {
   const [items, setItems] = useState([]);
   const [currentCategory, setCurrentCategory] = useState(null);
   const [currentColor, setCurrentColor] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getImageUrlById = async (imageId) => {
     try {
@@ -45,6 +46,7 @@ const MyClosetScreen = ({ navigation }) => {
   };
 
   const fetchItems = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get("http://192.168.1.2:5000/api/image/", {
         params: {
@@ -70,11 +72,14 @@ const MyClosetScreen = ({ navigation }) => {
       }
     } catch (error) {
       console.error("Error fetching items:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Fetch categories from the backend
   const fetchCategories = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(
         "http://192.168.1.2:5000/api/image/categories",
@@ -94,11 +99,14 @@ const MyClosetScreen = ({ navigation }) => {
       setCategories(data.categories);
     } catch (error) {
       console.error("Error fetching categories:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   //Fetch colors from the backend
   const fetchColors = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(
         "http://192.168.1.2:5000/api/image/colors",
@@ -118,11 +126,14 @@ const MyClosetScreen = ({ navigation }) => {
       setColors(data.colors);
     } catch (error) {
       console.error("Error fetching colors:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleCategoryPress = async (category) => {
-    setCurrentCategory(category); 
+    setCurrentCategory(category);
+    setIsLoading(true);
     try {
       const response = await axios.get(
         "http://192.168.1.2:5000/api/image/images_by_category",
@@ -146,11 +157,14 @@ const MyClosetScreen = ({ navigation }) => {
       }
     } catch (error) {
       console.error("Error fetching category items:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleColorPress = async (color) => {
-    setCurrentColor(color)
+    setCurrentColor(color);
+    setIsLoading(true);
     try {
       const response = await axios.get(
         "http://192.168.1.2:5000/api/image/images_by_colors",
@@ -174,9 +188,10 @@ const MyClosetScreen = ({ navigation }) => {
       }
     } catch (error) {
       console.error("Error fetching color items:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
-  
 
   useEffect(() => {
     fetchItems();
@@ -196,7 +211,7 @@ const MyClosetScreen = ({ navigation }) => {
     navigation.navigate("camera");
   };
 
-  const content = renderContent(items, handleAddItems);
+  const content = renderContent(items, handleAddItems, isLoading);
   const options = renderOptions(
     selectedSegmentIndex,
     categories,
@@ -204,7 +219,6 @@ const MyClosetScreen = ({ navigation }) => {
     handleCategoryPress,
     handleColorPress
   );
-
 
   return (
     <SafeAreaView style={styles.container}>
