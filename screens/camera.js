@@ -10,6 +10,7 @@ import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import { IconButton, Button, ActivityIndicator } from "react-native-paper";
 import CustomModal from "./components/custom-modal";
+import { BASE_URL } from "../lib/url";
 
 const CameraScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -37,55 +38,12 @@ const CameraScreen = ({ navigation }) => {
     }
   };
 
-  // const handleSearchForPairingItems = () => {
-  //   if (image) {
-  //     navigation.navigate("pairing-items-generator", { imageUrl: image });
-  //   } else {
-  //     console.log("No image selected.");
-  //   }
-  // };
-
-  const handleSearchForPairingItems = async () => {
+  const handleSearchForMatchingItems = () => {
     if (image) {
-      setUploading(true);
-      try {
-        const formData = new FormData();
-        const uniqueName = `pairing_${new Date().getTime()}.jpg`;
-
-        formData.append("image", {
-          uri: image,
-          type: "image/jpeg",
-          name: uniqueName,
-        });
-
-        const headers = {
-          "Content-Type": "multipart/form-data",
-        };
-
-        const response = await fetch(
-          "https://wardrobe-5hru.onrender.com/api/image/find_matching",
-          {
-            method: "POST",
-            headers: headers,
-            body: formData,
-          }
-        );
-
-        const data = await response.json();
-        if (response.ok) {
-          console.log("Matching images data:", data);
-        } else {
-          throw new Error(`Failed to find matching items: ${data.message}`);
-        }
-      } catch (error) {
-        console.error("Error finding matching items:", error);
-      } finally {
-        setUploading(false);
-      }
+      navigation.navigate("matching-items-generator", { imageUrl: image });
     } else {
       console.log("No image selected.");
     }
-    navigation.navigate("pairing-items-generator", { imageUrl: image });
   };
 
   const handleAddToMyCloset = async () => {
@@ -102,7 +60,7 @@ const CameraScreen = ({ navigation }) => {
         });
 
         const response = await fetch(
-          "http://192.168.1.2:5000/api/image/classify",
+          `${BASE_URL}/classify`,
           {
             method: "POST",
             body: formData,
@@ -186,7 +144,7 @@ const CameraScreen = ({ navigation }) => {
               textColor="#fff"
               onPress={() => {
                 handleAddToMyCloset();
-                console.log("Added to your closet...");
+                // console.log("Added to your closet...");
               }}
             >
               Add to my closet
@@ -201,7 +159,6 @@ const CameraScreen = ({ navigation }) => {
               textColor="#fff"
               onPress={() => {
                 handleCheckSimilarItems();
-                console.log("Checking for similar items...");
               }}
             >
               Check for Similar Items
@@ -214,11 +171,10 @@ const CameraScreen = ({ navigation }) => {
               labelStyle={{ fontSize: 15 }}
               textColor="#fff"
               onPress={() => {
-                handleSearchForPairingItems();
-                console.log("Searching pairing items...");
+                handleSearchForMatchingItems();
               }}
             >
-              Search for Pairing Items
+              Search for Matching Items
             </Button>
             <Button
               icon="camera"

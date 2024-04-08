@@ -11,6 +11,7 @@ import SegmentedControlTab from "react-native-segmented-control-tab";
 import axios from "axios";
 import renderContent from "./components/render-content";
 import renderOptions from "./components/render-options";
+import { BASE_URL } from "../lib/url";
 
 const MIN_ITEMS_CONTAINER_HEIGHT = "70%";
 
@@ -26,7 +27,7 @@ const MyClosetScreen = ({ navigation }) => {
   const getImageUrlById = async (imageId) => {
     try {
       const response = await axios.get(
-        `http://192.168.1.2:5000/api/image/get_image`,
+        `${BASE_URL}/get_image`,
         {
           params: { image_id: imageId },
         }
@@ -48,7 +49,7 @@ const MyClosetScreen = ({ navigation }) => {
   const fetchItems = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("http://192.168.1.2:5000/api/image/", {
+      const response = await axios.get(`${BASE_URL}/`, {
         params: {
           page: 1,
           per_page: 10,
@@ -82,7 +83,7 @@ const MyClosetScreen = ({ navigation }) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        "http://192.168.1.2:5000/api/image/categories",
+        `${BASE_URL}/categories`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -109,7 +110,7 @@ const MyClosetScreen = ({ navigation }) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        "http://192.168.1.2:5000/api/image/colors",
+        `${BASE_URL}/colors`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -136,7 +137,7 @@ const MyClosetScreen = ({ navigation }) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        "http://192.168.1.2:5000/api/image/images_by_category",
+        `${BASE_URL}/images_by_category`,
         {
           params: {
             category: category,
@@ -167,7 +168,7 @@ const MyClosetScreen = ({ navigation }) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        "http://192.168.1.2:5000/api/image/images_by_colors",
+        `${BASE_URL}/images_by_colors`,
         {
           params: {
             color: color,

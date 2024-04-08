@@ -7,8 +7,8 @@ const OutfitGeneratorScreen = ({navigation}) => {
     navigation.navigate("camera");
   };
 
-  const handleCreateOutfit = () => {
-    navigation.navigate("create-outfits");
+  const handleOutfitFinder = () => {
+    navigation.navigate("outfit-finder");
   };
 
   return (
@@ -34,12 +34,12 @@ const OutfitGeneratorScreen = ({navigation}) => {
         </Button>
         <Button
           mode="elevated"
-          onPress={handleCreateOutfit}
+          onPress={handleOutfitFinder}
           style={styles.button}
           labelStyle={styles.buttonLabel}
           contentStyle={styles.buttonContent}
         >
-           Create Outfit
+           Outfit Finder By Text
         </Button>
       </View>
     </SafeAreaView>

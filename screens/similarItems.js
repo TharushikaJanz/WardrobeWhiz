@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
@@ -6,8 +7,16 @@ import {
   View,
   TouchableOpacity,
   Text,
+  Image,
 } from "react-native";
-import { Appbar, Card, IconButton, Button } from "react-native-paper";
+import {
+  Appbar,
+  Card,
+  IconButton,
+  Button,
+  ActivityIndicator,
+} from "react-native-paper";
+import { BASE_URL } from "../lib/url";
 
 const CARD_WIDTH = "47%";
 const CARD_HEIGHT = 200;
@@ -15,45 +24,82 @@ const MIN_ITEMS_CONTAINER_HEIGHT = "70%";
 
 const SimilarItemsGeneratorScreen = ({ route, navigation }) => {
   const { imageUrl } = route.params;
-//   const [items, setItems] = useState([]);
+  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-//   useEffect(() => {
-//     const fetchSimilarItems = async () => {
-//       try {
-//         const response = await fetch("YOUR_BACKEND_API_URL", {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({ imageUrl }),
-//         });
-//         const data = await response.json();
-//         setItems(data.items); // Assuming your backend returns a list of items
-//       } catch (error) {
-//         console.error("Error fetching similar items:", error);
-//       }
-//     };
+  const getImageUrlById = async (imageId) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/get_image`,
+        {
+          params: { image_id: imageId },
+        }
+      );
+      if (response.status === 200) {
+        return response.request.responseURL;
+      } else {
+        console.error(
+          `Fetching image by id failed, status code: ${response.status}`
+        );
+        return null;
+      }
+    } catch (error) {
+      console.error(`Error fetching image by id: ${imageId}, error: `, error);
+      return null;
+    }
+  };
 
-//     fetchSimilarItems();
-//   }, [imageUrl]);
+  const fetchSimilarItems = async () => {
+    setIsLoading(true);
+    let formData = new FormData();
+    formData.append("image", {
+      uri: imageUrl,
+      type: "image/jpeg",
+      name: `upload_${Date.now()}.jpg`,
+    });
 
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/find_similar`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
-  // Dummy images data
-  const items = [
-    { id: 1, source: require("../assets/bluetshirt.jpeg") },
-    { id: 2, source: require("../assets/bluetshirt.jpeg") },
-    { id: 3, source: require("../assets/bluetshirt.jpeg") },
-    { id: 4, source: require("../assets/bluetshirt.jpeg") },
-    { id: 5, source: require("../assets/bluetshirt.jpeg") },
-    { id: 6, source: { uri: imageUrl } },
-  ];
+      if (response.status === 200 && response.data.data) {
+        const imageIds = response.data.data;
+        const imageUrlPromises = imageIds.map(getImageUrlById);
+        const imageUrls = await Promise.all(imageUrlPromises);
+        setItems(imageUrls.filter((url) => url !== null));
+      } else {
+        console.error("Failed to fetch similar items:", response.status);
+      }
+    } catch (error) {
+      console.error("Error fetching similar items:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    if (imageUrl) {
+      fetchSimilarItems();
+    }
+  }, [imageUrl]);
 
   const handleAddItems = () => {
     navigation.navigate("camera");
   };
 
   const renderContent = () => {
+    if (isLoading) {
+      return (
+        <View style={styles.centered}>
+          <ActivityIndicator size={60} animating={true} color="#765952" />
+        </View>
+      );
+    }
     if (items.length === 0) {
       return (
         <TouchableOpacity style={styles.watermarkContainer}>
@@ -75,10 +121,14 @@ const SimilarItemsGeneratorScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       );
     } else {
-      return items.map((item) => (
-        <Card key={item.id} style={styles.card}>
-          <Card.Cover source={item.source} />
-        </Card>
+      return items.map((item, index) => (
+        <View key={index} style={styles.card}>
+          <Image
+            source={{ uri: item }}
+            style={{ width: "100%", height: "100%" }}
+            resizeMode="contain"
+          />
+        </View>
       ));
     }
   };
@@ -184,6 +234,12 @@ const styles = StyleSheet.create({
     color: "#cccccc",
     fontSize: 20,
     marginTop: 10,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 60,
   },
 });
 
