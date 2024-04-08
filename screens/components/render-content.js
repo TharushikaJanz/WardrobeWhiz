@@ -22,10 +22,10 @@ const renderContent = (items, handleAddItems) => {
       </TouchableOpacity>
     );
   } else {
-    return items.map((item) => (
-      <View key={item.id} style={styles.card}>
+    return items.map((item, index) => (
+      <View key={index} style={styles.card}>
         <Image
-          source={{ uri: item.source }}
+          source={{ uri: item }}
           style={{ width: "100%", height: "100%" }}
           resizeMode="contain"
         />

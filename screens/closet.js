@@ -6,7 +6,7 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import { Appbar} from "react-native-paper";
+import { Appbar } from "react-native-paper";
 import SegmentedControlTab from "react-native-segmented-control-tab";
 import axios from "axios";
 import renderContent from "./components/render-content";
@@ -20,7 +20,28 @@ const MyClosetScreen = ({ navigation }) => {
   const [selectedSegmentIndex, setSelectedSegmentIndex] = useState(0);
   const [items, setItems] = useState([]);
 
-  // Fetch items from the backend
+  const getImageUrlById = async (imageId) => {
+    try {
+      const response = await axios.get(
+        `http://192.168.1.2:5000/api/image/get_image`,
+        {
+          params: { image_id: imageId },
+        }
+      );
+      if (response.status === 200) {
+        return response.request.responseURL;
+      } else {
+        console.error(
+          `Fetching image by id failed, status code: ${response.status}`
+        );
+        return null;
+      }
+    } catch (error) {
+      console.error(`Error fetching image by id: ${imageId}, error: `, error);
+      return null;
+    }
+  };
+
   const fetchItems = async () => {
     try {
       const response = await axios.get("http://192.168.1.2:5000/api/image/", {
@@ -33,17 +54,18 @@ const MyClosetScreen = ({ navigation }) => {
         },
       });
 
-      if (response.status !== 200) {
-        throw new Error("Fetching items failed");
+      if (response.status === 200) {
+        const imageIds = response.data.images;
+        const imageUrlPromises = imageIds.map(getImageUrlById);
+        const imageUrls = await Promise.all(imageUrlPromises);
+
+        const validUrls = imageUrls.filter((url) => url);
+        setItems(validUrls);
+      } else {
+        throw new Error(
+          `Fetching items failed with status code: ${response.status}`
+        );
       }
-      console.log(response.data);
-      // setItems(response.data.images);
-      setItems(
-        response.data.images.map((imageId) => ({
-          id: imageId,
-          source: `http://192.168.1.2:5000/images/${imageId}.jpg`,
-        }))
-      );
     } catch (error) {
       console.error("Error fetching items:", error);
     }
