@@ -5,17 +5,22 @@ const renderOptions = (
   selectedSegmentIndex,
   categories,
   colors,
-  handleCategorySelect
+  handleCategoryPress,
+  handleColorPress
 ) => {
   if (selectedSegmentIndex === 0) {
     return categories.map((category, index) => (
-      <TouchableOpacity key={index} style={styles.categoryIcon}>
+      <TouchableOpacity
+        key={index}
+        style={styles.categoryIcon}
+        onPress={() => handleCategoryPress(category)}
+      >
         <Text style={styles.categoryText}>{category}</Text>
       </TouchableOpacity>
     ));
   } else {
     return colors.map((color, index) => (
-      <TouchableOpacity key={index} style={styles.categoryIcon}>
+      <TouchableOpacity key={index} style={styles.categoryIcon} onPress={() => handleColorPress(color)}>
         <View
           style={[styles.colorCircle, { backgroundColor: color.toLowerCase() }]}
         />

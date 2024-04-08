@@ -19,6 +19,8 @@ const MyClosetScreen = ({ navigation }) => {
   const [colors, setColors] = useState([]);
   const [selectedSegmentIndex, setSelectedSegmentIndex] = useState(0);
   const [items, setItems] = useState([]);
+  const [currentCategory, setCurrentCategory] = useState(null);
+  const [currentColor, setCurrentColor] = useState(null);
 
   const getImageUrlById = async (imageId) => {
     try {
@@ -119,10 +121,66 @@ const MyClosetScreen = ({ navigation }) => {
     }
   };
 
+  const handleCategoryPress = async (category) => {
+    setCurrentCategory(category); 
+    try {
+      const response = await axios.get(
+        "http://192.168.1.2:5000/api/image/images_by_category",
+        {
+          params: {
+            category: category,
+            page: 1,
+            per_page: 10,
+          },
+        }
+      );
+      if (response.status === 200 && response.data && response.data.images) {
+        const imageIds = response.data.images;
+        const imageUrlPromises = imageIds.map(getImageUrlById);
+        const imageUrls = await Promise.all(imageUrlPromises);
+        const validUrls = imageUrls.filter((url) => url);
+        setItems(validUrls);
+        console.log("CategoryImages:", validUrls);
+      } else {
+        console.error("Failed to fetch category items:", response.status);
+      }
+    } catch (error) {
+      console.error("Error fetching category items:", error);
+    }
+  };
+
+  const handleColorPress = async (color) => {
+    setCurrentColor(color)
+    try {
+      const response = await axios.get(
+        "http://192.168.1.2:5000/api/image/images_by_colors",
+        {
+          params: {
+            color: color,
+            page: 1,
+            per_page: 10,
+          },
+        }
+      );
+      if (response.status === 200 && response.data && response.data.images) {
+        const imageIds = response.data.images;
+        const imageUrlPromises = imageIds.map(getImageUrlById);
+        const imageUrls = await Promise.all(imageUrlPromises);
+        const validUrls = imageUrls.filter((url) => url);
+        setItems(validUrls);
+        console.log("ColorImages:", validUrls);
+      } else {
+        console.error("Failed to fetch color items:", response.status);
+      }
+    } catch (error) {
+      console.error("Error fetching color items:", error);
+    }
+  };
+  
+
   useEffect(() => {
     fetchItems();
     fetchCategories();
-    // fetchColors();
   }, []);
 
   const handleTabChange = async (index) => {
@@ -139,7 +197,14 @@ const MyClosetScreen = ({ navigation }) => {
   };
 
   const content = renderContent(items, handleAddItems);
-  const options = renderOptions(selectedSegmentIndex, categories, colors);
+  const options = renderOptions(
+    selectedSegmentIndex,
+    categories,
+    colors,
+    handleCategoryPress,
+    handleColorPress
+  );
+
 
   return (
     <SafeAreaView style={styles.container}>
