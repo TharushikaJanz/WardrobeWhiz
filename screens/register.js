@@ -18,17 +18,18 @@ const RegisterScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = React.useState("");
 
   const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      console.error("Passwords do not match.");
+      return;
+    }
+
     try {
-      const response = await axios.post(
-        "https://wardrobe-5hru.onrender.com/api/auth/register",
-        {
-          fullName,
-          phone,
-          email,
-          password,
-          confirmPassword,
-        }
-      );
+      const response = await axios.post(`${AUTH_BASE_URL}/register`, {
+        full_name: fullName,
+        phone_number: phone,
+        email: email,
+        password: password,
+      });
       navigation.navigate("signIn");
     } catch (error) {
       console.error("Error registering user:", error);

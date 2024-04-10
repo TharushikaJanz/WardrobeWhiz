@@ -9,42 +9,46 @@ import {
 import { TextInput, Button, Text } from "react-native-paper";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import axios from "axios";
+import { AUTH_BASE_URL } from "../lib/url";
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  
 
   const handleLogin = async () => {
-    // try {
-    //   const response = await fetch(
-    //     "https://wardrobe-5hru.onrender.com/api/auth/login",
-    //     {
-    //       method: "POST",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify({ email, password }),
-    //     }
-    //   );
+    try {
+      const response = await axios.post(
+        `${AUTH_BASE_URL}/login`,
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Login successful.", response.data);
 
-    //   if (!response.ok) {
-    //     throw new Error("Failed to login");
-    //   }
-    //   const data = await response.json();
-    //   const success = data.success;
+      const userName = response.data.user;
+      navigation.navigate("home", { user: userName });
 
-    //   if (success) {
-    //     // Navigate to the home screen after successful login
-    //     navigation.navigate("home");
-    //   } else {
-    //     // Handle login failure, e.g., show an error message to the user
-    //     console.error("Login failed");
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    // }
-     navigation.navigate("home");
+    } catch (error) {
+      let message = "Login failed: ";
+      if (error.response) {
+          message += error.response.data.message.message || "An error occurred during login.";
+          console.error("Login failed:", error.response.data);
+      } else if (error.request) {
+          message += "No response received from the server.";
+          console.error("Login failed:", error.request);
+      } else {
+          message += error.message;
+          console.error("Error", error.message);
+      }
+      alert(message);
+    }
   };
+  
 
   return (
     <KeyboardAvoidingView
