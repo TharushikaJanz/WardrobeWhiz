@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#4A3728",
     fontWeight: "bold",
+    textTransform: "capitalize"
   },
 });
 
