@@ -1,40 +1,43 @@
 import React from "react";
 import { View, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
-import { Card, Text } from "react-native-paper";
+import { Card, Text, Avatar } from "react-native-paper";
 
-const HomeScreen = ({ navigation }) => {
-  const userName = "Tharushika";
+const HomeScreen = ({ navigation, route }) => {
+  const { user } = route.params;
 
-  const handleMyCloset= () => {
-    navigation.navigate('closet')
-  }
+  const firstName = user ? user.split(" ")[0] : "Guest";
 
-  const handlePurchaseItem= () => {
-    navigation.navigate('camera')
-  }
+  const userInitial = firstName.charAt(0).toUpperCase();
 
-  const handleOutfitRecommendation= () => {
-    navigation.navigate('outfit-generator')
-  }
+  const handleMyCloset = () => {
+    navigation.navigate("closet");
+  };
+
+  const handlePurchaseItem = () => {
+    navigation.navigate("camera");
+  };
+
+  const handleOutfitRecommendation = () => {
+    navigation.navigate("outfit-generator");
+  };
 
   const buttons = [
     {
       title: "My Closet",
       onPress: handleMyCloset,
-      backgroundColor: "#C0804019", // Caramel with 40% opacity
+      backgroundColor: "#C0804019",
     },
     {
       title: "Purchase Item",
       onPress: handlePurchaseItem,
-      backgroundColor: "#B4653519", // Carob with 40% opacity
+      backgroundColor: "#B4653519",
     },
     {
       title: "Outfit Recommendation",
       onPress: handleOutfitRecommendation,
-      backgroundColor: "#D8A06006", // Umber with 40% opacity
+      backgroundColor: "#D8A06006",
     },
   ];
-  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -44,9 +47,17 @@ const HomeScreen = ({ navigation }) => {
             Hello
           </Text>
           <Text variant="headlineMedium" style={styles.userName}>
-            {userName}
+            {firstName}
           </Text>
         </View>
+        <Avatar.Text
+          size={40}
+          label={userInitial}
+          style={styles.avatar}
+          labelStyle={styles.avatarLabel}
+          color={"#fff"}
+          backgroundColor={"#4B371C"}
+        />
       </View>
       <View style={styles.buttonContainer}>
         {buttons.map((button, index) => (
@@ -55,7 +66,9 @@ const HomeScreen = ({ navigation }) => {
             onPress={button.onPress}
             style={styles.touchable}
           >
-            <Card style={[styles.card, { backgroundColor: button.backgroundColor }]}>
+            <Card
+              style={[styles.card, { backgroundColor: button.backgroundColor }]}
+            >
               <Text style={styles.buttonText}>{button.title}</Text>
             </Card>
           </TouchableOpacity>
@@ -71,16 +84,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
   },
   header: {
-    alignItems: "left",
+    alignItems: "center",
     marginVertical: 80,
     marginHorizontal: 25,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  avatar: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+  },
+  avatarLabel: {
+    fontWeight: "bold",
+    fontSize: 28,
   },
   greeting: {
     fontWeight: "bold",
-    letterSpacing: 0.8
+    letterSpacing: 0.8,
   },
   userName: {
-    fontWeight: "600", 
+    fontWeight: "600",
     fontStyle: "italic",
     letterSpacing: 1.5,
     marginTop: 8,
