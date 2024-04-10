@@ -94,7 +94,7 @@ const CameraScreen = ({ navigation }) => {
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [3, 4],
-      quality: 1,
+      quality: 0.5,
     });
     await handleImageResult(result);
     setShowModal(false);
@@ -105,7 +105,7 @@ const CameraScreen = ({ navigation }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [3, 4],
-      quality: 1,
+      quality: 0.5,
     });
     await handleImageResult(result);
     setShowModal(false);

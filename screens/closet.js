@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -12,7 +12,6 @@ import axios from "axios";
 import renderContent from "./components/render-content";
 import renderOptions from "./components/render-options";
 import { BASE_URL } from "../lib/url";
-import { useFocusEffect } from "@react-navigation/native";
 
 const MIN_ITEMS_CONTAINER_HEIGHT = "70%";
 
@@ -27,9 +26,12 @@ const MyClosetScreen = ({ navigation }) => {
 
   const getImageUrlById = async (imageId) => {
     try {
-      const response = await axios.get(`${BASE_URL}/get_image`, {
-        params: { image_id: imageId },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/get_image`,
+        {
+          params: { image_id: imageId },
+        }
+      );
       if (response.status === 200) {
         return response.request.responseURL;
       } else {
@@ -52,6 +54,7 @@ const MyClosetScreen = ({ navigation }) => {
           page: 1,
           per_page: 10,
         },
+        
         headers: {
           "Content-Type": "application/json",
         },
@@ -80,11 +83,14 @@ const MyClosetScreen = ({ navigation }) => {
   const fetchCategories = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/categories`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/categories`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.status !== 200) {
         throw new Error("Fetching categories failed");
@@ -104,11 +110,14 @@ const MyClosetScreen = ({ navigation }) => {
   const fetchColors = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/colors`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/colors`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.status !== 200) {
         throw new Error("Fetching colors failed");
@@ -128,13 +137,16 @@ const MyClosetScreen = ({ navigation }) => {
     setCurrentCategory(category);
     setIsLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/images_by_category`, {
-        params: {
-          category: category,
-          page: 1,
-          per_page: 10,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/images_by_category`,
+        {
+          params: {
+            category: category,
+            page: 1,
+            per_page: 10,
+          },
+        }
+      );
       if (response.status === 200 && response.data && response.data.images) {
         const imageIds = response.data.images;
         const imageUrlPromises = imageIds.map(getImageUrlById);
@@ -156,13 +168,16 @@ const MyClosetScreen = ({ navigation }) => {
     setCurrentColor(color);
     setIsLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/images_by_colors`, {
-        params: {
-          color: color,
-          page: 1,
-          per_page: 10,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/images_by_colors`,
+        {
+          params: {
+            color: color,
+            page: 1,
+            per_page: 10,
+          },
+        }
+      );
       if (response.status === 200 && response.data && response.data.images) {
         const imageIds = response.data.images;
         const imageUrlPromises = imageIds.map(getImageUrlById);
@@ -180,17 +195,10 @@ const MyClosetScreen = ({ navigation }) => {
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      const fetchData = async () => {
-        setIsLoading(true);
-        await fetchItems();
-        await fetchCategories();
-        setIsLoading(false);
-      };
-      fetchData();
-    }, [])
-  );
+  useEffect(() => {
+    fetchItems();
+    fetchCategories();
+  }, []);
 
   const handleTabChange = async (index) => {
     setSelectedSegmentIndex(index);

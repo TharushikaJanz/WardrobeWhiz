@@ -29,12 +29,9 @@ const SimilarItemsGeneratorScreen = ({ route, navigation }) => {
 
   const getImageUrlById = async (imageId) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/get_image`,
-        {
-          params: { image_id: imageId },
-        }
-      );
+      const response = await axios.get(`${BASE_URL}/get_image`, {
+        params: { image_id: imageId },
+      });
       if (response.status === 200) {
         return response.request.responseURL;
       } else {
@@ -59,13 +56,9 @@ const SimilarItemsGeneratorScreen = ({ route, navigation }) => {
     });
 
     try {
-      const response = await axios.post(
-        `${BASE_URL}/find_similar`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await axios.post(`${BASE_URL}/find_similar`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.status === 200 && response.data.data) {
         const imageIds = response.data.data;
@@ -91,6 +84,7 @@ const SimilarItemsGeneratorScreen = ({ route, navigation }) => {
   const handleAddItems = () => {
     navigation.navigate("camera");
   };
+
 
   const renderContent = () => {
     if (isLoading) {
@@ -149,6 +143,25 @@ const SimilarItemsGeneratorScreen = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
       </Appbar.Header>
+      <View style={styles.contentContainer}>
+        <Card style={styles.imageCard}>
+          <Card.Cover source={{ uri: imageUrl }} style={styles.cardImage} />
+        </Card>
+
+        <View style={styles.tryAnotherContainer}>
+          <Button
+            icon="camera"
+            mode="elevated"
+            buttonColor="#765952"
+            style={{ borderRadius: 0, marginBottom: 20 }}
+            labelStyle={{ fontSize: 15 }}
+            textColor="#fff"
+            onPress={handleAddItems}
+          >
+            Try Another Item
+          </Button>
+        </View>
+      </View>
 
       <ScrollView style={styles.cardScrollView}>
         <View style={styles.itemsContainer}>{renderContent()}</View>
@@ -234,6 +247,32 @@ const styles = StyleSheet.create({
     color: "#cccccc",
     fontSize: 20,
     marginTop: 10,
+  },
+  contentContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginHorizontal: 10,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  imageCard: {
+    width: "47%",
+    height: CARD_HEIGHT,
+  },
+  cardImage: {
+    height: "100%",
+    resizeMode: "cover",
+    elevation: 4,
+    borderRadius: 0,
+    borderWidth: 3,
+    borderColor: "#000",
+  },
+  tryAnotherContainer: {
+    width: "47%",
+    height: CARD_HEIGHT,
+    justifyContent: "center",
+    padding: 10,
   },
   centered: {
     flex: 1,
