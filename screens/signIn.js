@@ -47,6 +47,7 @@ const SignInScreen = ({ navigation }) => {
       }
       alert(message);
     }
+    // navigation.navigate("home", { user: userName = "Guest" });
   };
   
 
